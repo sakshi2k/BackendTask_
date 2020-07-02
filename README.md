@@ -1,17 +1,17 @@
 ### Backend-task
 
-A NodeJS application for user and admin registration with REST APIs implementation.
+A NodeJS application for user and instructor registration with REST APIs implementation.
 
 #### Salient features
 1. Models that includes Authentication via:
 
-  Email id  (Admin authentication)
+  Email id  (Instructor authentication)
 
-    - Authentication status update for Users by Admin
+    - Authentication status update for Users by Instructor
 
-  Admin approval  (User authentication)
+  Instructor approval  (User authentication)
 
-    - Admin authentication confirmation through email
+    - Instructor authentication confirmation through email
 
 2. CRUD operations on users 
 3. Update Details of users 
@@ -20,21 +20,21 @@ A NodeJS application for user and admin registration with REST APIs implementati
   
 #### Routes 
  
-#####   ADMIN ROUTES
+#####   INSTRUCTOR ROUTES
 
- /admin : 
+ /instructor : 
  
       get - Renders registration page
       
-      post - Creates an ADMIN User
+      post - Creates an INSTRUCTOR User
       
- /admin/verify :
+ /instructor/verify :
  
-      get - To Verify Admin account via Secret Code
+      get - To Verify instructor account via Secret Code
       
       post - Authenticated Registeration
       
- /admin/authenticateUsers :
+ /instructor/authenticateUsers :
  
       get - To authenticate new users
       

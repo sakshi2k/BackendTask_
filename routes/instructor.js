@@ -6,27 +6,27 @@ const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
 // Requiring Models
-const Admin = require('../models/Admin');
+const Instructor = require('../models/Instructor');
 const User = require('../models/User');
 
 const app = express();
 
 /* ************************************** Routes ************************************* */
 
-app.route("/admin")
+app.route("/instructor")
 
     // desc : Renders registration page
     .get((req, res) => {
-        res.render("admin-register");
+        res.render("instructor-register");
     })
 
-    // desc :  CREATE - Create an ADMIN User.
+    // desc :  CREATE - Create an INSTRUCTOR User.
     .post(upload.single('avatar'), async(req, res) => {
     const {userName, caption, phoneNo, email, address, age, occupation} = req.body;
     const avatar = req.file;                                        // multer dest: 'uploads/'
 
     
-    const newAdmin = new Admin({
+    const newInstructor = new Instructor({
         userName : userName,
         caption : caption, 
         phoneNo : phoneNo, 
@@ -38,21 +38,21 @@ app.route("/admin")
     });
 
     try {    
-        // create admin with unique email.
-        Admin.findOne({email : email}, async(err, foundUser) => {
+        // create Instructor with unique email.
+        Instructor.findOne({email : email}, async(err, foundUser) => {
             if(!err) {
                 
                 // check if user already registered.
                 if(foundUser){
-                    res.send("ADMIN already registered with this email ID.!");
+                    res.send("Instructor already registered with this email ID.!");
                 } else {
 
                     // Generate secret token
                     const secretToken = randomString.generate(16);
 
-                    newAdmin.secretToken = secretToken;
+                    newInstructor.secretToken = secretToken;
 
-                    await newAdmin.save();
+                    await newInstructor.save();
 
                     // sending token through mail - NODE-MAILER
 
@@ -74,8 +74,8 @@ app.route("/admin")
                     // send mail with defined transport object
                     let info = await transporter.sendMail({
                       from: '"Fred Foo 👻" <foo@example.com>', // sender address
-                                                //   to: newAdmin.email, // list of receivers
-                      to: newAdmin.email, // list of receivers
+                                                //   to: newInstructor.email, // list of receivers
+                      to: newInstructor.email, // list of receivers
                       subject: "Your One time Secret Token", // Subject line
                       text: message, // plain text body
                       html: message, // html body
@@ -104,10 +104,10 @@ app.route("/admin")
 });
 
 
-app.route("/admin/verify")
-    // desc : To Verify Admin account via Secret Code
+app.route("/instructor/verify")
+    // desc : To Verify Instructor account via Secret Code
     .get((req, res) => {
-        res.render("verify-admin");
+        res.render("verify-instructor");
     })
 
     // Authenticated Registeration
@@ -115,19 +115,19 @@ app.route("/admin/verify")
         try{
         const {secretToken, email} = req.body;
 
-        // find the account that matches with the admin using email.
-        Admin.findOne({email : email}, async(err, foundAdmin) => {
+        // find the account that matches with the Instructor using email.
+        Instructor.findOne({email : email}, async(err, foundInstructor) => {
             if(!err){
-                if(!foundAdmin) {
+                if(!foundInstructor) {
                     res.send({
                         success : false,
-                        message : "Admin not found!"
+                        message : "Instructor not found!"
                     })
                 } else {
-                    if(foundAdmin.secretToken === secretToken) {
-                        foundAdmin.active = true;   // false by default
-                        foundAdmin.secretToken = '';
-                        foundAdmin.save();
+                    if(foundInstructor.secretToken === secretToken) {
+                        foundInstructor.active = true;   // false by default
+                        foundInstructor.secretToken = '';
+                        foundInstructor.save();
                         res.send({
                             success : true,
                             message : "Congratulations, You are not registered.!"
@@ -149,7 +149,7 @@ app.route("/admin/verify")
     });
 
 // desc : To authenticate new users
-app.route("/admin/authenticateUsers")
+app.route("/instructor/authenticateUsers")
     
     .get(async (req, res) => {
 
@@ -173,7 +173,7 @@ app.route("/admin/authenticateUsers")
             }
         })
 
-        res.redirect("/admin/authenticateUsers");
+        res.redirect("/instructor/authenticateUsers");
     });
 
 module.exports = app;
