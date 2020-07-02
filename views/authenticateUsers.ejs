@@ -3,7 +3,7 @@
     <div class="jumbotron">        
 
         <% users.forEach(function(data){ %>
-            <form action="/admin/authenticateUsers" method="POST">
+            <form action="/instructor/authenticateUsers" method="POST">
                 <div class="item">
                     <p class="listItem">Name : <%= data.userName %></p>
                     <button class="btn btn-secondary" name="choice" value="<%= data._id %>" >Accept</button>

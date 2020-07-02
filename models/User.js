@@ -6,12 +6,6 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-
-    caption: {
-        type : String,
-        trim: true,
-        default: 'N/A'
-    },
     
     phoneNo: {
         type : Number,
@@ -38,18 +32,16 @@ const userSchema = new mongoose.Schema({
         trim: true,
         default: 'N/A'
     },
-    
-    occupation : {
-        type : String,
-        trim: true,
-        default: 'N/A'
-    }, 
 
     isAuthenticated : {
         type : Boolean,
         default: false
-    }
-    
+    }, 
+
+    tasksAssigned : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Task'
+    }]    
 });
 
 module.exports = User = mongoose.model("User", userSchema);

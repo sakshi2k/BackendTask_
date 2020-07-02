@@ -17,22 +17,51 @@ A NodeJS application for user and instructor registration with REST APIs impleme
 3. Update Details of users 
     - individually by ID
     - all users
-  
+4. Task uniquely identified by it's name
+    - Task Name given to student to access the task.
+
+#### Models
+
+1. User                  
+2. Instructor
+3. Task
+
 #### Routes 
+
+#####   TASK ROUTES
+
+ /tasks : 
  
+     get - Shows all TASKS assigned
+      
+/addtasks :
+
+     post - Creates an INSTRUCTOR User
+
+/task/:taskName :
+
+     get - Shows the task.
+
+     post - Submits task after editing (by student)
+
+/task/:taskName/:studentName :
+
+     get - Shows submitted Task by Student
+
+
 #####   INSTRUCTOR ROUTES
 
  /instructor : 
  
-      get - Renders registration page
-      
-      post - Creates an INSTRUCTOR User
+     get - Renders registration page
+     
+     post - Creates an INSTRUCTOR User
       
  /instructor/verify :
  
-      get - To Verify instructor account via Secret Code
-      
-      post - Authenticated Registeration
+     get - To Verify instructor account via Secret Code
+     
+     post - Authenticated Registeration
       
  /instructor/authenticateUsers :
  
@@ -44,21 +73,21 @@ A NodeJS application for user and instructor registration with REST APIs impleme
 
  /user :
  
-      get - Renders registration page
-      
-      post - Creates a user
+     get - Renders registration page
+     
+     post - Creates a user
       
  /user/:userEmail :
  
-      get - To get details of a single User
-      
-      patch - Edits the details of a single user
-      
-      delete - Deletes a single user entry from the User table
+     get - To get details of a single User
+     
+     patch - Edits the details of a single user
+     
+     delete - Deletes a single user entry from the User table
       
  /users/findAll : 
  
-      get - Lists all the users present in the User table
+     get - Lists all the users present in the User table
   
 
 ###### dependencies {

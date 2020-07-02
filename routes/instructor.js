@@ -2,8 +2,6 @@ const express = require("express");
 const randomString = require("randomstring");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer"); 
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
 
 // Requiring Models
 const Instructor = require('../models/Instructor');
@@ -20,21 +18,16 @@ app.route("/instructor")
         res.render("instructor-register");
     })
 
-    // desc :  CREATE - Create an INSTRUCTOR User.
-    .post(upload.single('avatar'), async(req, res) => {
-    const {userName, caption, phoneNo, email, address, age, occupation} = req.body;
-    const avatar = req.file;                                        // multer dest: 'uploads/'
+     // desc :  CREATE - Create an Instructor User.
+    .post(async(req, res) => {
+    const {userName, phoneNo, email, address, age} = req.body;
 
-    
     const newInstructor = new Instructor({
         userName : userName,
-        caption : caption, 
         phoneNo : phoneNo, 
         email : email, 
         address : address, 
-        age : age, 
-        occupation : occupation
-        // avatar yet to be uploaded in DB        
+        age : age
     });
 
     try {    
@@ -74,7 +67,6 @@ app.route("/instructor")
                     // send mail with defined transport object
                     let info = await transporter.sendMail({
                       from: '"Fred Foo 👻" <foo@example.com>', // sender address
-                                                //   to: newInstructor.email, // list of receivers
                       to: newInstructor.email, // list of receivers
                       subject: "Your One time Secret Token", // Subject line
                       text: message, // plain text body
@@ -92,7 +84,6 @@ app.route("/instructor")
                     });
                 }            
             }
-        
         })   
     } catch (err) {
         return res.json({
@@ -100,9 +91,7 @@ app.route("/instructor")
             message: err
         })
     }
-
 });
-
 
 app.route("/instructor/verify")
     // desc : To Verify Instructor account via Secret Code
@@ -113,37 +102,36 @@ app.route("/instructor/verify")
     // Authenticated Registeration
     .post(async(req, res, next) => {
         try{
-        const {secretToken, email} = req.body;
+            const {secretToken, email} = req.body;
 
-        // find the account that matches with the Instructor using email.
-        Instructor.findOne({email : email}, async(err, foundInstructor) => {
-            if(!err){
-                if(!foundInstructor) {
-                    res.send({
-                        success : false,
-                        message : "Instructor not found!"
-                    })
-                } else {
-                    if(foundInstructor.secretToken === secretToken) {
-                        foundInstructor.active = true;   // false by default
-                        foundInstructor.secretToken = '';
-                        foundInstructor.save();
+                // find the account that matches with the Instructor using email.
+            Instructor.findOne({email : email}, async(err, foundInstructor) => {
+                if(!err){
+                    if(!foundInstructor) {
                         res.send({
-                            success : true,
-                            message : "Congratulations, You are not registered.!"
-                        }) 
+                            success : false,
+                            message : "Instructor not found!"
+                        })
                     } else {
-                        // Wrong Secret Token
-                        return res.json({
-                            success : "false",
-                            message : "Wrong Secret token"
-                        });
+                        if(foundInstructor.secretToken === secretToken) {
+                            foundInstructor.active = true;   // false by default
+                            foundInstructor.secretToken = '';
+                            foundInstructor.save();
+                            res.send({
+                                success : true,
+                                message : "Congratulations, You are not registered.!"
+                            }) 
+                        } else {
+                            // Wrong Secret Token
+                            return res.json({
+                                success : "false",
+                                message : "Wrong Secret token"
+                            });
+                        }
                     }
-                }
-            }
-        })
-        }
-        catch (err) {
+                }   
+                })
+        } catch (err) {
             next(error);
         }
     });
@@ -153,7 +141,7 @@ app.route("/instructor/authenticateUsers")
     
     .get(async (req, res) => {
 
-        const unauthenticatedUsers = await User.find({isAuthenticated : "false"});// (err, foundUser) => {
+        const unauthenticatedUsers = await User.find({isAuthenticated : "false"});
             
         res.render("authenticateUsers", {users : unauthenticatedUsers });
     })

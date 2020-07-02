@@ -8,9 +8,9 @@ const app = express();
 
 // importing Models
 const User = require('./models/User');
-const Admin = require('./models/Admin');
+const Instructor = require('./models/Instructor');
 
-mongoose.connect('mongodb://localhost:27017/sampleDB', {useNewUrlParser: true, useUnifiedTopology: true},
+mongoose.connect('mongodb://localhost:27017/test_DB', {useNewUrlParser: true, useUnifiedTopology: true},
     (err) => {
         if(!err) console.log("Connected to DB");
         else res.send("Error occured in connecting with DB : " + err);
@@ -23,7 +23,8 @@ app .set('view engine', 'ejs')
 
 // Mounting the routes
 app.use('/', require('./routes/user'));
-app.use('/', require('./routes/admin'));
+app.use('/', require('./routes/instructor'));
+app.use('/', require('./routes/task'));
 
 app.get("/", (req, res) => {
     res.render("home");

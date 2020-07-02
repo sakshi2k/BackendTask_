@@ -15,16 +15,14 @@ app.route("/user")
 
     // desc :  CREATE - Create a user
     .post(async(req, res) => {
-        const {userName, caption, phoneNo, email, address, age, occupation} = req.body;
+        const {userName, phoneNo, email, address, age} = req.body;
 
         const newUser = new User({
             userName : userName,
-            caption : caption, 
             phoneNo : phoneNo, 
             email : email, 
             address : address, 
-            age : age, 
-            occupation : occupation
+            age : age
         });
 
         try {    
